@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Click the Circle Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #gameArea {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background-color: white;
+      border: 2px solid #333;
+      overflow: hidden;
+    }
+    .circle {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: red;
+      cursor: pointer;
+    }
+    #score {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+    #startButton {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Click the Circle Game</h1>
+  <div id="gameArea"></div>
+  <div id="score">Score: 0</div>
+  <button id="startButton">Start Game</button>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const scoreDisplay = document.getElementById("score");
+    const startButton = document.getElementById("startButton");
+    let score = 0;
+    let interval;
+
+    function getRandomPosition() {
+      const x = Math.random() * (gameArea.clientWidth - 50);
+      const y = Math.random() * (gameArea.clientHeight - 50);
+      return { x, y };
+    }
+
+    function createCircle() {
+      const circle = document.createElement("div");
+      circle.classList.add("circle");
+      const { x, y } = getRandomPosition();
+      circle.style.left = `${x}px`;
+      circle.style.top = `${y}px`;
+
+      circle.addEventListener("click", () => {
+        score++;
+        scoreDisplay.textContent = `Score: ${score}`;
+        circle.remove();
+      });
+
+      gameArea.appendChild(circle);
+
+      setTimeout(() => {
+        if (gameArea.contains(circle)) {
+          circle.remove();
+        }
+      }, 1000);
+    }
+
+    startButton.addEventListener("click", () => {
+      score = 0;
+      scoreDisplay.textContent = "Score: 0";
+      clearInterval(interval);
+      interval = setInterval(createCircle, 800);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        alert(`Game over! Your score is ${score}`);
+      }, 30000);
+    });
+  </script>
+</body>
+</html>
